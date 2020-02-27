@@ -16,7 +16,7 @@ class App extends React.Component {
     let item = itemString
     let newList = this.state.list
     newList.push(item)
-    let object = { list: newList }
+    let object = { list: newList, currentItem: "", errorString: "" }
     this.setState(object)
   }
 
@@ -24,7 +24,6 @@ class App extends React.Component {
     console.log("item submitted!")
     if (this.state.currentItem.trim().length > 1 && this.state.currentItem.length < 200 ) {
       this.pushToList(this.state.currentItem)
-      this.setState( { currentItem: "", errorString: "" })
     } else {
       let errorString = "Your item must have more than one character and be less than 200 characters"
       this.setState({ errorString: errorString })
@@ -55,8 +54,11 @@ class App extends React.Component {
     return (
       <div>
         <p>{this.state.errorString}</p>
-        <input onChange={(event)=>{this.handleInputchange(event);}} value={this.state.currentItem}
-        onKeyPress={(event) => {this.handleKeyPress(event);}} /><br/>
+        <input 
+          onChange={(event)=>{this.handleInputchange(event);}}
+          onKeyPress={(event) => {this.handleKeyPress(event);}} 
+          value={this.state.currentItem}/>
+          <br/>
         <button onClick={()=>{this.submitNewItem();}}>click me to add</button>
       <ul>
         {itemsToShow}
