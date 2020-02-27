@@ -43,11 +43,18 @@ class App extends React.Component {
     
   }
 
+  doneItem(event) {
+    let itemsArray = this.state.list
+    console.log(event.target.id)
+    itemsArray.splice(event.target.id, 1);
+    this.setState( { lsit: itemsArray })
+  }
+
 
   render() {
     let itemsToShow = this.state.list.map ((item, index) => {
       return (
-        <li key={index}><button>Done!</button> {item}</li>
+        <li key={index}><button id={index} onClick={(event)=>{this.doneItem(event);}}>Done!</button> {item}</li>
       )
     })
 
