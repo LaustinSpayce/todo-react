@@ -1,4 +1,5 @@
 import React from 'react'
+import Moment from 'moment'
 import { hot } from 'react-hot-loader'
 
 class App extends React.Component {
@@ -13,7 +14,7 @@ class App extends React.Component {
   }
 
   pushToList(itemString) {
-    let item = itemString
+    let item = { item: itemString, time: Moment.now() }
     let newList = this.state.list
     newList.push(item)
     let object = { list: newList, currentItem: "", errorString: "" }
@@ -53,8 +54,11 @@ class App extends React.Component {
 
   render() {
     let itemsToShow = this.state.list.map ((item, index) => {
+      let timeString = Moment(item.time).fromNow()
       return (
-        <li key={index}><button id={index} onClick={(event)=>{this.doneItem(event);}}>Done!</button> {item}</li>
+        <li key={index}><button id={index} onClick={(event)=>{this.doneItem(event);}}>Done!</button> {item.item}
+        <br/>Added to the list {timeString}
+        </li>
       )
     })
 
