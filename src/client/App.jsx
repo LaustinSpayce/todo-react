@@ -37,11 +37,11 @@ class Form extends React.Component {
   render() {
     return (
     <div>
-      <p>{this.state.errorString}</p>
+      <div className="alert alert-danger">{this.state.errorString}</div>
       <input 
         onChange={(event)=>{this.handleInputchange(event);}}
         onKeyPress={(event) => {this.handleKeyPress(event);}} 
-        value={this.state.currentInput}/>
+        value={this.state.currentInput}/><br/>
       <button onClick={()=>{this.submitNewItem();}}>click me to add</button>
     </div>
     )
@@ -87,9 +87,14 @@ class ToDoItem extends React.Component {
   render() {
     let timeString = Moment(this.props.time).fromNow()
     return (
-      <li key={this.props.index}><button id={this.props.index} onClick={(event)=>{this.doneItem(event);}}>Done!</button> {this.props.item}
-          <br/>Added to the list {timeString}
-      </li>
+      <div key={this.props.index} className="card mb-2">        
+        <div className="card-body">{this.props.item}
+          <br/>
+          <span className="text-muted">Added to the list {timeString}</span>
+          <br/>
+          <button id={this.props.index} onClick={(event)=>{this.doneItem(event);}}>Done!</button>
+        </div>
+      </div>
     )
   }
 }
@@ -121,15 +126,19 @@ class App extends React.Component {
   render() {
 
     return (
-      <div>     
-        <Form 
-          submitItem={(itemString)=>{this.pushToList(itemString)}}
-        />
+      <div>
+        <div className="row">     
+          <Form 
+            submitItem={(itemString)=>{this.pushToList(itemString)}}
+          />
+        </div>
+        <div>
           <ItemList 
-          markAsDone={(number)=>{this.doneItem(number)}}
-          list={this.state.list}/>
+            markAsDone={(number)=>{this.doneItem(number)}}
+            list={this.state.list}/>
+        </div>
       </div>
-    );
+    )
   }
 }
 
