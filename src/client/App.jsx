@@ -49,6 +49,52 @@ class Form extends React.Component {
 }
 
 
+class ItemList extends React.Component {
+  constructor() {
+    super()
+
+  }
+
+    render() {
+      let itemsToShow = this.props.list.map ((item, index) => {
+        return (
+          <ToDoItem 
+            markAsDone={(id) => {this.props.markAsDone(id)}}
+            index={index}
+            item={item.item}
+            time={item.time}
+            key={index}
+            />
+        )
+      })
+      return (
+        <ul>
+          {itemsToShow}
+        </ul>
+      )
+    }
+
+}
+
+
+class ToDoItem extends React.Component {
+
+  doneItem(event) {
+    let number = event.target.id
+    this.props.markAsDone(number)
+  }
+
+  render() {
+    let timeString = Moment(this.props.time).fromNow()
+    return (
+      <li key={this.props.index}><button id={this.props.index} onClick={(event)=>{this.doneItem(event);}}>Done!</button> {this.props.item}
+          <br/>Added to the list {timeString}
+      </li>
+    )
+  }
+}
+
+
 class App extends React.Component {
   constructor() {
     super()
@@ -66,31 +112,22 @@ class App extends React.Component {
     this.setState(object)
   }
 
-  doneItem(event) {
+  doneItem(number) {
     let itemsArray = this.state.list
-    console.log(event.target.id)
-    itemsArray.splice(event.target.id, 1);
+    itemsArray.splice(number, 1);
     this.setState( { lsit: itemsArray })
   }
 
   render() {
-    let itemsToShow = this.state.list.map ((item, index) => {
-      let timeString = Moment(item.time).fromNow()
-      return (
-        <li key={index}><button id={index} onClick={(event)=>{this.doneItem(event);}}>Done!</button> {item.item}
-        <br/>Added to the list {timeString}
-        </li>
-      )
-    })
 
     return (
       <div>     
         <Form 
           submitItem={(itemString)=>{this.pushToList(itemString)}}
         />
-        <ul>
-          {itemsToShow}
-        </ul>
+          <ItemList 
+          markAsDone={(number)=>{this.doneItem(number)}}
+          list={this.state.list}/>
       </div>
     );
   }
