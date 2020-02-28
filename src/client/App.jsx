@@ -2,34 +2,14 @@ import React from 'react'
 import Moment from 'moment'
 import { hot } from 'react-hot-loader'
 
-class App extends React.Component {
+class Form extends React.Component {
   constructor() {
     super()
 
     this.state = {
-      currentItem: "",
-      list: [],
-      errorString: ""
+      currentInput: "",
+      errorString: "",
     }
-  }
-
-  pushToList(itemString) {
-    let item = { item: itemString, time: Moment.now() }
-    let newList = this.state.list
-    newList.push(item)
-    let object = { list: newList, currentItem: "", errorString: "" }
-    this.setState(object)
-  }
-
-  submitNewItem() {
-    console.log("item submitted!")
-    if (this.state.currentItem.trim().length > 1 && this.state.currentItem.length < 200 ) {
-      this.pushToList(this.state.currentItem)
-    } else {
-      let errorString = "Your item must have more than one character and be less than 200 characters"
-      this.setState({ errorString: errorString })
-    }
-    
   }
 
   handleKeyPress(event) {
@@ -40,8 +20,50 @@ class App extends React.Component {
 
   handleInputchange(event) {
     let newWord = event.target.value
-    this.setState( { currentItem: newWord })
-    
+    this.setState( { currentInput: newWord })
+  }
+
+  submitNewItem() {
+    console.log("item submitted!")
+    if (this.state.currentInput.trim().length > 1 && this.state.currentInput.length < 200 ) {
+      this.props.submitItem(this.state.currentInput)
+      this.setState({ currentInput: "", errorString: "" })
+    } else {<s></s>
+      let errorString = "Your item must have more than one character and be less than 200 characters"
+      this.setState({ errorString: errorString })
+    } 
+  }
+
+  render() {
+    return (
+    <div>
+      <p>{this.state.errorString}</p>
+      <input 
+        onChange={(event)=>{this.handleInputchange(event);}}
+        onKeyPress={(event) => {this.handleKeyPress(event);}} 
+        value={this.state.currentInput}/>
+      <button onClick={()=>{this.submitNewItem();}}>click me to add</button>
+    </div>
+    )
+  }
+}
+
+
+class App extends React.Component {
+  constructor() {
+    super()
+
+    this.state = {
+      list: []
+    }
+  }
+
+  pushToList(itemString) {
+    let item = { item: itemString, time: Moment.now() }
+    let newList = this.state.list
+    newList.push(item)
+    let object = { list: newList }
+    this.setState(object)
   }
 
   doneItem(event) {
@@ -50,7 +72,6 @@ class App extends React.Component {
     itemsArray.splice(event.target.id, 1);
     this.setState( { lsit: itemsArray })
   }
-
 
   render() {
     let itemsToShow = this.state.list.map ((item, index) => {
@@ -63,17 +84,13 @@ class App extends React.Component {
     })
 
     return (
-      <div>
-        <p>{this.state.errorString}</p>
-        <input 
-          onChange={(event)=>{this.handleInputchange(event);}}
-          onKeyPress={(event) => {this.handleKeyPress(event);}} 
-          value={this.state.currentItem}/>
-          <br/>
-        <button onClick={()=>{this.submitNewItem();}}>click me to add</button>
-      <ul>
-        {itemsToShow}
-      </ul>
+      <div>     
+        <Form 
+          submitItem={(itemString)=>{this.pushToList(itemString)}}
+        />
+        <ul>
+          {itemsToShow}
+        </ul>
       </div>
     );
   }
